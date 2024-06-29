@@ -1,0 +1,4 @@
+
+*.pyc
+*.bin
+**.DS_Store

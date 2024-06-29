@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Digitaler Galvanik Demonstrator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+
+    <div class="fixed top-0 left-0 w-full bg-gray-100 shadow-lg z-10">
+        <div class="container mx-auto px-5 py-3 flex justify-between items-center">
+            <img src="img/dfki_Logo_digital_black.svg" alt="Image1" class="h-20 w-70">
+            <h1 class="text-black text-3xl font-bold mr-4">Digitaler Galvanik Demonstrator</h1>
+
+            <div class="flex items-center">
+                <img src="img/green-ai-hub-mittelstand.svg" alt="Image2" class="h-20 w-70">
+            </div>
+        </div>
+    </div>
+
+    <div class="flex justify-center mt-20">
+        <svg width="800" height="400" xmlns="http://www.w3.org/2000/svg">
+            <g id="Layer_1">
+                <title>Layer 1</title>
+                <rect stroke="#000" stroke-width="4" id="svg_1" height="304.00016" width="604.99986" y="57.99984" x="93.00014"
+                    fill="#fff" />
+                <line id="svg_2" y2="138" x2="179.00581" y1="138" x1="93" stroke-width="4" stroke="#000" fill="none" />
+                <line id="svg_3" y2="138" x2="697.00581" y1="138" x1="611" stroke-width="4" stroke="#000" fill="none" />
+                <rect stroke="#666666" id="svg_4" height="26" width="39" y="126" x="178" stroke-width="4" fill="#666666" />
+                <rect id="svg_5" height="26" width="39" y="126" x="570.57083" stroke-width="4" stroke="#666666"
+                    fill="#666666" />
+                <rect stroke="#666666" id="svg_6" height="43" width="57" y="118" x="219" stroke-width="4" fill="#666666" />
+                <rect stroke="#666666" id="svg_7" height="43" width="57" y="118" x="510" stroke-width="4" fill="#666666" />
+                <rect stroke="#666666" id="svg_8" height="76" width="230" y="103" x="276" stroke-width="4" fill="#666666" />
+                <rect stroke="#0f0f00" stroke-opacity="0" opacity="0.2" id="svg_9" height="280" width="603.00003"
+                    y="80" x="93" stroke-width="4" fill="#005fbf" />
+                <line stroke="#ffffff" stroke-width="10" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_10" y2="60"
+                    x2="699.99998" y1="60" x1="87.14286" fill="none" />
+            </g>
+        </svg>
+    </div>
+
+    <form id="colorForm" class="flex justify-center space-x-6 mt-0">
+        <div class="flex flex-col items-center space-y-2">
+            <input type="radio" id="keinProblem" name="colors" value="0" onclick="onChange(this)" color="#005fbf" class="hidden" />
+            <label for="keinProblem" class="text-center cursor-pointer w-40 h-16 flex justify-center items-center border border-gray-300 hover:bg-blue-800 hover:text-white" style="background-color: #14144B; color: white;">Kein Problem</label>
+        </div>
+        <div class="flex flex-col items-center space-y-2">
+            <input type="radio" id="kontamination" name="colors" value="1" onclick="onChange(this)" color="#fffa8d" class="hidden" />
+            <label for="kontamination" class="text-center cursor-pointer w-40 h-16 flex justify-center items-center border border-gray-300 hover:bg-yellow-500 hover:text-white" style="background-color: #14144B; color: white;">Kontamination</label>
+        </div>
+        <div class="flex flex-col items-center space-y-2">
+            <input type="radio" id="alteEntfettung" name="colors" value="2" onclick="onChange(this)" color="#cc716a" class="hidden" />
+            <label for="alteEntfettung" class="text-center cursor-pointer w-40 h-16 flex justify-center items-center border border-gray-300 hover:bg-red-500 hover:text-white" style="background-color: #14144B; color: white;">Alte Entfettungslösung</label>
+        </div>
+        <div class="flex flex-col items-center space-y-2">
+            <input type="radio" id="falscheDosierung" name="colors" value="3" onclick="onChange(this)" color="#6acc6f" class="hidden" />
+            <label for="falscheDosierung" class="text-center cursor-pointer w-40 h-16 flex justify-center items-center border border-gray-300 hover:bg-green-500 hover:text-white" style="background-color: #14144B; color: white;">Falsche Dosierung</label>
+        </div>
+        <div class="flex flex-col items-center space-y-2">
+            <input type="radio" id="temperaturproblem" name="colors" value="4" onclick="onChange(this)" color="#cc6ab4" class="hidden" />
+            <label for="temperaturproblem" class="text-center cursor-pointer w-40 h-16 flex justify-center items-center border border-gray-300 hover:bg-purple-500 hover:text-white" style="background-color: #14144B; color: white;">Temperaturproblem</label>
+        </div>
+    </form>
+
+       <script>
+        function onChange(element) {
+            fetch('/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({value: element.value})
+            })
+            .then(response => response.json())
+            .then(data => console.log('Success:', data))
+            .catch((error) => console.error('Error:', error));
+
+            let color = element.getAttribute("color");
+            document.getElementById("svg_9").setAttribute("fill", color);
+            element.nextElementSibling.style.backgroundColor = '#2e2e31';
+
+        // Change style for unselected labels
+        const labels = document.querySelectorAll('label');
+        labels.forEach(label => {
+            if (label !== element.nextElementSibling) {
+                label.style.backgroundColor = '#14144B';
+                label.style.color = 'white';
+            }
+        });
+        }
+       </script>
+
+    <div class="container mx-auto mt-16 pl-18">
+        <div class="mx-auto bg-gray-100 p-7 shadow-xl">
+            <h2 class="text-center font-normal mb-2"> Für weitere Texte...</h2>
+        </div>
+    </div>
+
+    <div class="flex justify-center mt-12">
+        <img src="img/green-ai-hub-keyvisual.svg"alt="Image1">
+    </div>
+
+    <div class="flex justify-center items-center h-24 mt-24 bg-blue-950">
+        <p class="text-white"> Lukas Schiesser & Leonie Grafweg &copy; DFKI 2024</p>
+    </div>
+
+</body>

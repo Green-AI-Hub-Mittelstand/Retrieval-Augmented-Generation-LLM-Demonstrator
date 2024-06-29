@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM RAG Demonstrator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='output.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+
+    <div class="fixed top-0 left-0 w-full bg-gray-100 shadow-lg z-10">
+        <div class="container mx-auto px-5 py-3 flex justify-between items-center">
+            <img src="{{ url_for('static', filename='img/dfki_Logo_digital_black.svg') }}" alt="Image1" class="h-20 w-70">
+            <h1 class="text-black text-3xl font-bold mr-4">LLM RAG Demonstrator</h1>
+
+            <div class="flex items-center">
+                <img src="{{ url_for('static', filename='img/green-ai-hub-mittelstand.svg') }}" alt="Image2" class="h-20 w-70">
+            </div>
+        </div>
+    </div>
+
+    <div class="w-full bg-gray-100 shadow-md mt-28">
+        <div class="container mx-auto px-5 py-2 flex justify-between space-x-4">
+            <button id="switchWiki" class="bg-gray-100 hover:bg-gray-200 text-gray-500 font-semibold py-2 px-4 rounded-md" onclick="switchWiki()">Wiki Input</button>
+            <button id="switchLanguage" class="bg-gray-100 hover:bg-gray-200 text-gray-500 font-semibold py-2 px-4 rounded-md" onclick="switchLanguage()">Deutsch</button>
+        </div>
+    </div>
+
+    <div class="container mx-auto mt-8 sm:mt-16 px-4 sm:px-10 lg:px-64">
+        <div class="mx-auto bg-white p-7 shadow-xl">
+            <h2 class="text-lg font-semibold mb-3">User Input:</h2>
+            <div class="mb-3">
+                <input type="text" id="userInput" class="w-full rounded-md px-1 py-4" placeholder="Enter here...">
+            </div>
+            <button id ="sendData" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md">Submit</button>
+        </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row justify-center">
+        <div class="container mx-auto mt-8 sm:mt-12 px-4 sm:px-5 lg:px-10">
+            <div class="bg-white p-10 shadow-xl">
+                <h2 class="text-lg font-semibold mb-3">LLM Default Output</h2>
+                <h2 class="text-lg  font-light mb-3" id="llmElectrictiy">Power Consumption:</h2>
+                <div class="mb-10">
+                    <div class="w-full border-2 border-blue-900 px-5 py-2 overflow-auto" style="height: 15rem;">
+                        <output type="text" id="defaultLLMOutput" class="w-full px-1 py-2">Output...</output>
+                    </div>             
+                </div>
+            </div>
+        </div>
+    
+        <div class="container mx-auto mt-8 sm:mt-12 px-4 sm:px-5 lg:px-10">
+            <div class="bg-white p-10 shadow-xl">
+                <h2 class="text-lg font-semibold mb-3">LLM RAG Output</h2>
+                <h2 class="text-lg font-light mb-3" id="ragElectrictiy">Power Consumption:</h2>
+                <div class="mb-10">
+                    <div class="w-full border-2 border-blue-900 px-5 py-2 overflow-auto" style="height: 15rem;">
+                        <output type="text" id="defaultRAGOutput" class="w-full px-1 py-2">Output...</output>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex justify-center mt-12">
+        <img src="{{ url_for('static', filename='img/green-ai-hub-keyvisual.svg') }}"alt="Image1">
+    </div>
+
+    <div class="flex justify-center items-center h-24 mt-24 bg-blue-950">
+        <p class="text-white"> &copy; DFKI 2024</p>
+    </div>
+
+    <footer>
+        <script src="{{ url_for('static', filename='js/submit.js') }}"></script>
+
+        <script>
+            function switchWiki() {
+                window.location.href = '/wikiEN';
+            }
+
+            function switchLanguage() {
+                window.location.href = '/homeDE';
+            }
+
+        </script>
+    </footer>
+</body>
+</html>

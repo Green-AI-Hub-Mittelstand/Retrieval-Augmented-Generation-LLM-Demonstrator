@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>LLM Demonstrator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top bg-light-subtle navbar-custom navbar-dark" style="padding: 0px;height: 90px;background: var(--bs-navbar-active-color);border-color: rgb(238,238,238);">
+        <div class="container"><a class="navbar-brand fs-2" href="#" style="color: rgb(38,38,38);font-weight: bold;">LLM RAG Demonstrator</a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navbarResponsive"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive"></div><img height="70px" src="{{ url_for('static', filename='img/green-ai-hub-mittelstand.svg') }}">
+        </div>
+    </nav>
+    <section style="margin-top: 120px;">
+        <div>
+            <div style="margin-right: 20%;margin-left: 20%;margin-bottom: 10px;">
+                <h5>Nutzer Input:</h5><input class="" id="userInput" type="text" style="width: 100%;height: 60px;"><button id="sendData" class="btn btn-primary" type="button" style="margin: 5px;background: rgb(54,195,70);border-color: rgb(54,195,70);">Eingabe</button>
+            </div>
+        </div>
+        <div class="container" style="padding-top: 0;">
+            <div class="row" style="min-height: 500px;margin-top: 20px;">
+                <div class="col">
+                    <h5>LLM Default Output</h5>
+                    <h6 id="llmElectrictiy">Stromverbrauch:</h6>
+                    <div style="color: var(--bs-dark-border-subtle);min-height: 400px;box-shadow: 5px 5px #36c346;border: 2px solid #36c346;padding: 3px;padding-left: 10px;">
+                        <p id="defaultLLMOutput" style="color: var(--bs-emphasis-color);margin: 5px;">Paragraph</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <h5>LLM RAG Output</h5>
+                    <h6 id="ragElectrictiy">Stromverbrauch:</h6>
+                    <div style="color: var(--bs-dark-border-subtle);min-height: 400px;box-shadow: 5px 5px #14144b;border: 2px solid #14144b;padding: 3px;padding-left: 10px;">
+                        <p id="defaultRAGOutput" style="color: var(--bs-emphasis-color);margin: 5px;">Paragraph</p>
+                        <div role="status" class="absolute -translate-x-1/2 -translate-y-1/2 top-2/4 left-1/2">
+                            <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/><path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/></svg>
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="py-5 bg-black">
+        <div class="container">
+            <p class="text-center text-white m-0 small">Cornelius Wolff © DFKI 2023</p>
+        </div>
+    </footer>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/submit.js') }}"></script>
+</body>
+
+</html>
