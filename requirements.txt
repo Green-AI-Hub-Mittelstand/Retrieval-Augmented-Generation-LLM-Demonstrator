@@ -1,0 +1,5 @@
+Flask==3.0.2
+beautifulsoup4==4.12.3
+mlx-lm==0.14.2
+deepl==1.17.0
+requests==2.31.0
