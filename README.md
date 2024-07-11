@@ -69,13 +69,7 @@ By choosing RAG over fine-tuning, we can create more sustainable AI solutions th
       <a href="#about-the-project">About The Project</a>
     </li>
     <li><a href="#table-of-contents">Table of Contents</a></li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
+    <li><a href="#getting-started">Getting Started</a></li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -164,7 +158,7 @@ Don't forget to give the project a star! Thanks again!
 
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the MIT License. See the `LICENSE` file for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -173,7 +167,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Green-AI Hub Mittelstand - info@green-ai-hub.de
 
-Project Link: https://github.com/Green-AI-Hub-Mittelstand/repository_name
+Project Link: https://github.com/Green-AI-Hub-Mittelstand/LLM-Demonstrator
 
 <br />
   <a href="https://www.green-ai-hub.de/kontakt"><strong>Get in touch »</strong></a>
