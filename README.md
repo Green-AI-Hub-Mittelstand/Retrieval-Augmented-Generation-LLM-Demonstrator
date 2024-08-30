@@ -139,6 +139,10 @@ The LLM RAG Demonstrator provides a web interface for comparing the outputs of a
     <img src="images/screenshot.png" alt="Screenshot of the web interface" width="80%">
   </a>
 
+## Developers
+
+The overall concept of the demonstrator was developed by [Cornelius Wolff](mailto:cornelius.wolff@dfki.de), while the Front-End, the wikipedia feature and the retrieval process was developed by [Leonie Grafweg](mailto:leonie.grafweg@dfki.de).
+ 
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
