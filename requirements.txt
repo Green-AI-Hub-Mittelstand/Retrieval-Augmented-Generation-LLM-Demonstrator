@@ -3,3 +3,6 @@ beautifulsoup4==4.12.3
 mlx-lm==0.14.2
 deepl==1.17.0
 requests==2.31.0
+huggingface-hub==0.24.7
+chromadb==0.5.17
+sentence_transformers==3.2.1
