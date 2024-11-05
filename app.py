@@ -169,7 +169,7 @@ def statusLLM(taskId):
         time_difference = int(time.time() - llm_tasks[int(taskId)]["start"])
         rag_tasks[int(taskId)]["start"] = time.time()
         electricity = sum(power.cpu_power[-1 * time_difference:]) + sum(power.gpu_power[-1 * time_difference:])
-        electricity = int(electricity / 3600)
+        electricity = int(electricity / 3600) * 6
         return jsonify({'status': 'COMPLETE', 'result': llm_tasks[int(taskId)]["result"], 'electricity': electricity})
     
 @app.route('/status/rag/<taskId>', methods=['GET'])
