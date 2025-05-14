@@ -3,13 +3,12 @@ import deepl
 import configparser
 
 def read_config(config_path):
-    # Create a ConfigParser object
     config = configparser.ConfigParser()
- 
-    # Read the configuration file
     config.read(config_path)
 
-    auth_key = "TOKEN"
+    auth_key = config["auth"]["TOKEN"]
+
+    print("Using auth key: ", auth_key)
     return auth_key
 
 def translate_text(text):
@@ -52,7 +51,19 @@ def translate_db(db_path, db_path_transl):
                 f.write(str(keep))
             content = content.replace('\'', '')
             content = content.replace("'", '')
-            cur2.execute("INSERT INTO " + table + " VALUES ("+str(row[0])+", '"+str(row[1])+"', '" +content+ "')")
+
+            if table == 'projekte':
+                # Check if the row already exists in the projekte table
+                cur2.execute("SELECT COUNT(*) FROM " + table + " WHERE rowid=?", (row[0],))
+                count = cur2.fetchone()[0]
+                if count == 0:
+                    cur2.execute(f"INSERT INTO {table} VALUES (?, ?, ?)", 
+                                (row[0], str(row[1]), content))
+                else:
+                    print(f"Skipping existing record with ID {row[0]} in table {table}")
+            if table == 'mitteilungen':
+                cur2.execute(f"INSERT INTO {table} VALUES (?, ?, ?, ?)", 
+                            (row[0], str(row[1]), content, str(row[3])))
     con2.commit()
     con2.close()
 
@@ -61,7 +72,7 @@ keep = []
 config_path = "crawler/config.ini"
 keep_path = 'crawler/content.txt'
 auth_key = read_config(config_path)
-translator = deepl.Translator(auth_key)
+translator = deepl.Translator("42ec189e-c9fd-4fbb-a0f6-6001c069b378:fx")
 
 db_path = "crawler/green-ai-projekte.db"
 db_path_transl = "crawler/green-ai-projekte-eng.db"
