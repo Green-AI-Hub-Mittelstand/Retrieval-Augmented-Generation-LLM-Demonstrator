@@ -24,6 +24,7 @@
     <div class="w-full bg-gray-100 shadow-md mt-28">
         <div class="container mx-auto px-5 py-2 flex justify-between space-x-4">
             <button id="switchWiki" class="bg-gray-100 hover:bg-gray-200 text-gray-500 font-semibold py-2 px-4 rounded-md" onclick="switchWiki()">Wiki Eingabe</button>
+            <button class="bg-gray-100 hover:bg-gray-200 text-gray-500 font-semibold py-2 px-4 rounded-md" onclick="window.location.href='/visualization'">View Visualization</button>
             <button id="switchLanguage" class="bg-gray-100 hover:bg-gray-200 text-gray-500 font-semibold py-2 px-4 rounded-md" onclick="switchLanguage()">English</button>
         </div>
     </div>
@@ -34,7 +35,7 @@
             <div class="mb-3">
                 <input type="text" id="userInput" class="w-full rounded-md px-1 py-4" placeholder="Eingabe hier...">
             </div>
-            <button id ="sendData" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md">Eingabe</button>
+            <button id="sendData" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md">Eingabe</button>
         </div>
     </div>
 
@@ -64,8 +65,84 @@
         </div>
     </div>
 
+    <div class="container mx-auto mt-8">
+        <h2 class="text-lg font-semibold mb-3">RAG Processing Pipeline</h2>
+        <div id="pipeline" class="flex flex-col items-center">
+            <div class="step bg-gray-200 p-4 rounded-md mb-2 w-full text-center">Input Collection</div>
+            <div class="step bg-gray-200 p-4 rounded-md mb-2 w-full text-center">Querying Database</div>
+            <div class="step bg-gray-200 p-4 rounded-md mb-2 w-full text-center">Re-Ranking</div>
+            <div class="step bg-gray-200 p-4 rounded-md mb-2 w-full text-center">Generating Output</div>
+        </div>
+    </div>
+
+    <script>
+        function updatePipeline(stepIndex) {
+            const steps = document.querySelectorAll('.step');
+            
+            // Reset all steps to default color
+            steps.forEach(step => {
+                step.classList.add('bg-gray-200');
+                step.classList.remove('bg-green-500', 'bg-yellow-500');
+            });
+            
+            if (stepIndex >= steps.length+1) {
+                return;
+            }
+
+            for (let i = 0; i < steps.length; i++) {
+                if (i < stepIndex) {
+                    steps[i].classList.add('bg-green-500');
+                    steps[i].classList.remove('bg-gray-200');
+                } else if (i === stepIndex) {
+                    steps[i].classList.add('bg-yellow-500');
+                    steps[i].classList.remove('bg-gray-200');
+                } else {
+                    steps[i].classList.add('bg-gray-200');
+                    steps[i].classList.remove('bg-green-500', 'bg-yellow-500');
+                }
+            }
+
+        }
+    </script>
+
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+        const socket = io.connect('http://127.0.0.1:5001'); // Adjust the URL if needed
+
+        socket.on('connect', function() {
+            console.log('Connected to the server');
+        });
+
+        socket.on('update_pipeline', function(stepIndex) {
+            updatePipeline(stepIndex);
+        });
+
+        socket.on('disconnect', function() {
+            console.log('Disconnected from the server');
+        });
+
+        // Add event listener for keydown on the input field
+        document.getElementById('userInput').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent default action if needed
+                document.getElementById('sendData').click(); // Trigger button click
+            }
+        });
+
+        // Add click event listener for the button
+        document.getElementById('sendData').addEventListener('click', function() {
+            updatePipeline(6); // Reset colors when the button is clicked
+            startGeneration(); // Trigger the generation process
+        });
+
+        function startGeneration() {
+            console.log('Generation started'); // Placeholder for actual generation logic
+            // Add your generation logic here
+        }
+    </script>
+
     <div class="flex justify-center mt-12">
-        <img src="{{ url_for('static', filename='img/green-ai-hub-keyvisual.svg') }}"alt="Image1">
+        <img src="{{ url_for('static', filename='img/green-ai-hub-keyvisual.svg') }}" alt="Image1">
     </div>
 
     <div class="flex justify-center items-center h-24 mt-24 bg-blue-950">

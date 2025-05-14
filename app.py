@@ -10,8 +10,13 @@ import time
 import os
 import requests
 import re
+from flask_socketio import SocketIO
+from flask_cors import CORS
+from carbontracking import EmissionTracker, Dashboard
 
 app = Flask(__name__)
+socketio = SocketIO(app)
+CORS(app, resources={r"/*": {"origins": ["http://localhost:5001", "http://127.0.0.1:5001"]}})
 
 def generate_text(llm, tokenizer, tasks, translator):
     while True:
@@ -20,14 +25,15 @@ def generate_text(llm, tokenizer, tasks, translator):
             time.sleep(0.1)
             continue
         else:
-            # new_prompt = translator.translate_text(prompt, target_lang="EN-US")
             prompt = tasks[open_tasks[0]]["prompt"]
+            new_prompt = translator.translate_text(prompt, target_lang="EN-US")
+            print("New prompt:", new_prompt.detected_source_lang, new_prompt.text)   
             task_id = open_tasks[0]
             print("Dealing with task", task_id)
-            prompt = f"<s>[INST] 'You are a assistant who answers the following question. Question: {prompt}[/INST] "
-            result = generate(llm, tokenizer, prompt=prompt, verbose=False, max_tokens=1000, repetition_penalty=1.1)
-            # translated_output = translator.translate_text(result, target_lang=new_prompt.detected_source_lang)
-            tasks[task_id]["result"] = result   
+            prompt = f"<s>[INST] 'You are a helpful assistant who answers the following question. Question: {new_prompt.text}[/INST] "
+            result = generate(llm, tokenizer, prompt=prompt, verbose=False, max_tokens=1000)#, repetition_penalty=1.1)
+            translated_output = translator.translate_text(result, target_lang=new_prompt.detected_source_lang)
+            tasks[task_id]["result"] = translated_output.text   
 
 @app.route('/')
 def index():
@@ -196,10 +202,45 @@ def statusDatabase(taskId):
         # Return status as COMPLETE along with the result and electricity consumption
         return jsonify({'status': 'COMPLETE', 'result': database_tasks[int(taskId)]["result"]})
 
+@app.route('/visualization')
+def visualization():
+    return render_template('visualization.html')
+
+@app.route('/new-visualization')
+def new_visualization():
+    return render_template('new-visualization.html')
+
+@app.route('/update_pipeline')
+def update_pipeline():
+    # This route can be used to emit updates to the front end
+    # You can call this from the RAG class emit_update method
+    return jsonify({'status': 'success'})
+
+@socketio.on('connect')
+def handle_connect():
+    print('Client connected')
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('Client disconnected')
+
+def flush_client():
+    while True:
+        client.flush()
+        time.sleep(1)
+
 
 if __name__ == '__main__':
+    track=False
+    if track:
+        client = EmissionTracker()
+        client.start_tracking("llm_tracking", "model", "training")
+
+        flush_thread = threading.Thread(target=flush_client, daemon=True)
+        flush_thread.start()
+
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
-    AUTH_KEY = "TOKEN"
+    AUTH_KEY = "42ec189e-c9fd-4fbb-a0f6-6001c069b378:fx"
     translator = deepl.Translator(AUTH_KEY)
     power = PowerMetricsMonitor()
     power.start()
@@ -208,8 +249,8 @@ if __name__ == '__main__':
     llm_tasks = {0: {"result": "Test", "prompt": "", "start": 0}}
     rag_tasks = {0: {"result": "Test", "prompt": "", "start": 0}}
     database_tasks ={0:""}
-     # Create a new thread to generate the text
+    # Create a new thread to generate the text
     thread = threading.Thread(target=generate_text, args=(model, tokenizer, llm_tasks, translator), daemon=True)
     thread.start()
-    rag = RAG(translator, model, tokenizer, rag_tasks)
-    app.run(debug=True, host="0.0.0.0", port=5001)
+    rag = RAG(translator, model, tokenizer, rag_tasks, socketio=socketio)
+    socketio.run(app, debug=False, host="0.0.0.0", port=5001)

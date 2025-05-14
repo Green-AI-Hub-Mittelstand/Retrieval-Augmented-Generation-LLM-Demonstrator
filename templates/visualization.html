@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Pipeline Visualization</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='output.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div class="fixed top-0 left-0 w-full bg-gray-100 shadow-lg z-10">
+        <div class="container mx-auto px-5 py-3 flex justify-between items-center">
+            <img src="{{ url_for('static', filename='img/dfki_Logo_digital_black.svg') }}" alt="Image1" class="h-20 w-70">
+            <h1 class="text-black text-3xl font-bold mr-4">LLM RAG Process Pipeline</h1>
+
+            <div class="flex items-center">
+                <img src="{{ url_for('static', filename='img/green-ai-hub-mittelstand.svg') }}" alt="Image2" class="h-20 w-70">
+            </div>
+        </div>
+    </div>
+
+    <div class="w-full bg-gray-100 shadow-md mt-28">
+        <div class="container mx-auto px-5 py-2 flex justify-center">
+            <div class="mx-auto">
+                <button class="bg-gray-100 hover:bg-gray-200 text-gray-500 font-semibold py-2 px-4 rounded-md" onclick="window.location.href='/homeDE'">Home</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto mt-0 flex justify-center">
+        <img src="{{ url_for('static', filename='svg/rag_pipeline.svg') }}" 
+             alt="RAG Pipeline Visualization" 
+             style="max-width: 100%; height: auto;"
+             class="img-fluid">
+    </div>
+
+    <div class="flex justify-center mt-12">
+        <img src="{{ url_for('static', filename='img/green-ai-hub-keyvisual.svg') }}" alt="Image1">
+    </div>
+
+    <footer>
+        <div class="flex justify-center items-center h-24 mt-24 bg-blue-950">
+            <p class="text-white"> &copy; DFKI 2024</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="40 70 730 400">
+  <!-- Ingestion Section -->
+  <rect x="50" y="80" width="700" height="160" rx="20" fill="#BBD5F2" opacity="0.5"/>
+  <text x="70" y="110" font-family="Arial" font-size="18" font-weight="bold">Ingestion</text>
+  
+  <!-- Ingestion Pipeline -->
+  <!-- Documents -->
+  <rect x="90" y="130" width="80" height="80" fill="white" stroke="#333" stroke-width="1"/>
+  <rect x="95" y="135" width="80" height="80" fill="white" stroke="#333" stroke-width="1"/>
+  <rect x="100" y="140" width="80" height="80" fill="white" stroke="#333" stroke-width="1"/>
+  <text x="140" y="190" text-anchor="middle" font-family="Arial" font-size="12">Documents</text>
+  
+  <!-- Arrow 1 -->
+  <path d="M190 180 L270 180" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Chunks -->
+  <rect x="280" y="130" width="70" height="70" fill="white" stroke="#333" stroke-width="1"/>
+  <rect x="285" y="135" width="70" height="70" fill="white" stroke="#333" stroke-width="1"/>
+  <rect x="290" y="140" width="70" height="70" fill="white" stroke="#333" stroke-width="1"/>
+  <text x="325" y="190" text-anchor="middle" font-family="Arial" font-size="12">Chunks</text>
+  
+  <!-- Arrow 2 -->
+  <path d="M370 180 L450 180" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Embeddings -->
+  <rect x="460" y="140" width="100" height="80" fill="white" stroke="#333" stroke-width="1"/>
+  <text x="510" y="190" text-anchor="middle" font-family="Arial" font-size="12">Embeddings</text>
+  
+  <!-- Arrow 3 -->
+  <path d="M570 180 L650 180" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Database -->
+  <rect x="660" y="140" width="70" height="80" fill="white" stroke="#333" stroke-width="1"/>
+  <text x="695" y="190" text-anchor="middle" font-family="Arial" font-size="12">Database</text>
+
+  <!-- Retrieval Section -->
+  <rect x="50" y="260" width="450" height="160" rx="20" fill="#F2BBB8" opacity="0.5"/>
+  <text x="70" y="290" font-family="Arial" font-size="18" font-weight="bold">Retrieval</text>
+
+  <!-- Synthesis Section -->
+  <rect x="520" y="260" width="230" height="160" rx="20" fill="#BBF2BB" opacity="0.5"/>
+  <text x="540" y="290" font-family="Arial" font-size="18" font-weight="bold">Synthesis</text>
+  
+  <!-- Query -->
+  <rect x="90" y="320" width="100" height="60" fill="white" stroke="#333" stroke-width="1"/>
+  <text x="140" y="355" text-anchor="middle" font-family="Arial" font-size="12">Query</text>
+  
+  <!-- Arrow 4 -->
+  <path d="M200 350 L280 350" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Database (Retrieval) -->
+  <rect x="285" y="310" width="70" height="80" fill="white" stroke="#333" stroke-width="1"/>
+  <text x="320" y="355" text-anchor="middle" font-family="Arial" font-size="12">Database</text>
+
+  <!-- Arrow 5 -->
+  <path d="M360 350 L440 350" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Top K -->
+  <rect x="450" y="320" width="100" height="60" fill="white" stroke="#333" stroke-width="1"/>
+  <text x="500" y="335" text-anchor="middle" font-family="Arial" font-size="12">
+      <tspan x="500" dy="1.2em">Top K</tspan>
+      <tspan x="500" dy="1.2em">(incl. Re-Ranking)</tspan>
+  </text>
+  
+  <!-- Arrow 6 -->
+  <path d="M560 350 L620 350" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- LLM -->
+  <rect x="630" y="320" width="80" height="60" fill="white" stroke="#333" stroke-width="1"/>
+  <text x="670" y="355" text-anchor="middle" font-family="Arial" font-size="12">LLM</text>
+  
+  <!-- Query to LLM arrow -->
+  <path d="M140 380 Q400 460 670 380" stroke="#333" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+
+  <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M0,0 L6,3 L0,6 Z" fill="#333"/>
+  </marker>
+</svg>

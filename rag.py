@@ -5,10 +5,11 @@ import sqlite3
 import deepl
 import time
 import threading
+from sentence_transformers import CrossEncoder
 
 class RAG:
 
-    def __init__(self, translator, model, tokenizer, rag_tasks) -> None:
+    def __init__(self, translator, model, tokenizer, rag_tasks, socketio) -> None:
         self.embedding_model = embedding_functions.SentenceTransformerEmbeddingFunction(model_name="intfloat/multilingual-e5-large")
         self.client = chromadb.PersistentClient(path="./chromadb")
         self.__init_database()
@@ -20,6 +21,7 @@ class RAG:
         self.model, self.tokenizer = model, tokenizer
         self.translator = translator
         self.rag_tasks = rag_tasks
+        self.socketio = socketio
         threading.Thread(target=self.handle_tasks, daemon=True).start()
 
     def __split_string_in_half(self, s):
@@ -94,6 +96,73 @@ class RAG:
         )
         tasks[task_id]["result"] = "Added"
 
+    
+
+    def get_cross_encoder_scores(self, query, documents):
+        # Initialize cross-encoder
+        cross_encoder = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-12-v2')
+        
+        # Create query-document pairs
+        pairs = [[query, doc] for doc in documents]
+        
+        # Get scores
+        scores = cross_encoder.predict(pairs)
+        
+        # Normalize scores to 0-1 range
+        max_score = max(scores)
+        min_score = min(scores)
+        normalized_scores = [(s - min_score) / (max_score - min_score) for s in scores]
+        
+        return normalized_scores
+
+    def get_llm_scores(self, query, documents, llm):
+        scores = []
+        
+        for doc in documents:
+            prompt = f"""
+            Rate the relevance of this document to the query on a scale of 0-10.
+            
+            Query: {query}
+            Document: {doc}
+            
+            Criteria:
+            10: Perfect match, directly answers the query
+            7-9: Highly relevant
+            4-6: Partially relevant
+            1-3: Slightly relevant
+            0: Not relevant
+            
+            Provide only the numerical score.
+            """
+            
+            # Get score from LLM
+            try:
+                score = float(llm.predict(prompt))
+                # Normalize to 0-1 range
+                normalized_score = score / 10.0
+                scores.append(normalized_score)
+            except:
+                print("Error getting score from LLM")
+                scores.append(0.0)
+        
+        return scores
+
+    def hybrid_rerank(self, query, documents, llm, top_k=5):
+        # Get scores from cross-encoder
+        cross_encoder_scores = self.get_cross_encoder_scores(query, documents)
+        final_scores = []
+        for i, doc in enumerate(documents):
+            final_scores.append((doc, cross_encoder_scores))
+        
+        # Sort by combined score
+        ranked_results = sorted(final_scores, key=lambda x: x[1], reverse=True)
+        
+        # Return top k documents
+        return [doc for doc, score in ranked_results[:top_k]]
+
+    def emit_update(self, step_index):
+        # Emit the current step index to the front end
+        self.socketio.emit('update_pipeline', step_index)
 
     def handle_tasks(self) -> str:
         while True:
@@ -102,21 +171,30 @@ class RAG:
                 time.sleep(0.1)
                 continue
             else:
-                print(open_tasks)
-                # translated_text = self.translator.translate_text(prompt, target_lang="EN-US")
                 task_id = open_tasks[0]
                 prompt = self.rag_tasks[task_id]["prompt"]
+                self.emit_update(0)
+                prompt_translated = self.translator.translate_text(prompt, target_lang="EN-US")
+                self.emit_update(1)
+
                 result = self.collection.query(
-                    query_texts=prompt,
-                    n_results=3,
+                    query_texts=prompt_translated.text,
+                    n_results=10,
                 )
+
+                self.emit_update(2)
+
+                reranked_docs = self.hybrid_rerank(prompt_translated.text, result["documents"][0], llm=self.model, top_k=2)
+
+                self.emit_update(3)
+
                 # Concat documents
-                document_string = "\n".join([result["documents"][0][0], result["documents"][0][1]])
-                prompt = f"<s>[INST] Given the following data, answer the appended question: {document_string}\n Question: {prompt}[/INST] "
-                # output = "Example text"
-                output = generate(self.model, self.tokenizer, prompt=prompt, verbose=False, max_tokens=1000, repetition_penalty=1.1)
+                document_string = "\n".join([reranked_docs[0], reranked_docs[1]]) 
+                prompt = f"<s>[INST] Given the following data, answer the appended question: {document_string}\n Question: {prompt_translated.text}[/INST] "
+
+                output = generate(self.model, self.tokenizer, prompt=prompt, verbose=False, max_tokens=1000)#, repetition_penalty=1.1)
+
                 translated_output = self.translator.translate_text(output, target_lang="DE")
                 self.rag_tasks[task_id]["result"] = translated_output.text
-
-
+                self.emit_update(4)
    
